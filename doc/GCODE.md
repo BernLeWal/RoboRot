@@ -32,7 +32,11 @@ and empty lines will be ignored by the GCode-processor.
   >G100 _;Will remove the prefix ('G100 ' was the old prefix)
   >
   ```
-```
+
+## Overview of RoboRot G-Code commands
+
+* ```M400``` Power-On-Self-Test (POST)
+* ```M401``` Stop Power-On-Self-Test
 
 ## Further Resources
 

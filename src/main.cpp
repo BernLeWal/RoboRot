@@ -1,9 +1,12 @@
 #include <Arduino.h>
-#include <AccelStepper.h>
 
-#include "setup.h"
+#include "CommandParser.h"
+#include "CommandProcessor.h"
 
-AccelStepper stepper1 = AccelStepper(MOTOR1_TYPE, MOTOR1_PUL_PIN, MOTOR1_DIR_PIN );
+
+CommandProcessor processor;
+CommandParser parser(processor);
+
 
 void setup() {
     // write your initialization code here
@@ -14,15 +17,14 @@ void setup() {
     // initialize digital pin LED_BUILTIN as an output.
     pinMode(LED_BUILTIN, OUTPUT);
 
-    // initialize the stepper driver
-    stepper1.setMaxSpeed(MOTOR_DEFAULT_MAX_SPEED);
-    stepper1.setAcceleration( MOTOR_DEFAULT_ACCELERATION);
-    stepper1.moveTo(MOTOR_STEPS_PER_ROUND);
+    processor.setup();
 }
 
 
 bool blink = false;
 ulong display_time = 0;
+
+String command = "";
 
 void loop() {
     // display update every second
@@ -36,17 +38,28 @@ void loop() {
         Serial.print(" - ");
 
         // Stepper Motor
-        Serial.print("Stepper1 currentPos=");
-        Serial.print(stepper1.currentPosition());
-        Serial.print(", distanceToGo=");
-        Serial.print(stepper1.distanceToGo());
-
-        Serial.println();
+        processor.printStatus();
     }
 
-    // run the stepper motors
-    if ( stepper1.distanceToGo() == 0)
-        stepper1.moveTo(-stepper1.currentPosition());
-    stepper1.run();
+    // Command input from the serial interface
+    while (Serial.available() > 0) {
+        char incomingChar = Serial.read();
+
+        if (incomingChar == '\n') {
+            Serial.print("Received command: ");
+            Serial.println(command);
+
+            // Process the commands
+            parser.parseCommand(command);
+
+            command = "";
+        } else {
+            command += incomingChar;
+        }
+    }
+
+
+    // Execute the robotic arm control
+    processor.processCommands();
 }
 

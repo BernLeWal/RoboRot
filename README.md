@@ -30,6 +30,7 @@ port and will accept G-Code commands sent by the terminal.
 - **Upload** the firmware: ```pio run --target upload```  
   (or in CLION: Pio Plus Tasks --> Tasks/General/Upload)
 
+- Open the Serial-Monitor and enter your G-Code commands, see [doc/GCODE.md](doc/GCODE.md)
 
 ### Automated Tasks/Tests (CI/CD)
 - Run the **Unit Tests**: ```pio test```  
