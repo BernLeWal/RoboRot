@@ -35,12 +35,20 @@ and empty lines will be ignored by the GCode-processor.
 
 ## Overview of RoboRot G-Code commands
 
+* ```M112``` Emergency stop
 * ```M400``` Power-On-Self-Test (POST)
 * ```M401``` Stop Power-On-Self-Test
-* ```G100 P? S? F?``` Manual relative motor control 
-  * P..Motor (0..5) 
-  * S..Steps (-1000..+1000) 
-  * F...Feedrate (-1000..+1000)
+
+* ```G100 P? S? [F?]``` Manual relative motor control 
+* ```G101 P? S? [F?]``` Manual absolute motor control
+* ```G28``` Return to Home (Zero) Position
+* ```G92 P? [S?]``` Set Current Position 
+
+Parameters used:
+* P..Motor (0..5)
+* S..Steps (-1000..+1000)
+* F...Feedrate (-1000..+1000)
+
 
 ## Further Resources
 

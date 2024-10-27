@@ -44,10 +44,17 @@ void CommandParser::parseCommand(String cmd) {
     while( currentPos < tokenCount ) {
         int backupPos = currentPos;
 
-        tryParseM400( tokens, tokenCount, currentPos);
-        tryParseM401( tokens, tokenCount, currentPos);
+        // M-Codes:
+        tryParseM( tokens, tokenCount, currentPos, "400");
+        tryParseM( tokens, tokenCount, currentPos, "401");
 
-        tryParseG100( tokens, tokenCount, currentPos);
+        // G-Codes:
+        tryParseG( tokens, tokenCount, currentPos, "100");
+        tryParseG( tokens, tokenCount, currentPos, "101");
+        tryParseG( tokens, tokenCount, currentPos,"28");
+        tryParseG(tokens, tokenCount, currentPos, "92");
+
+        // G-Code Parameters
         tryParseP( tokens, tokenCount, currentPos);
         tryParseS( tokens, tokenCount, currentPos);
         tryParseF( tokens, tokenCount, currentPos);
@@ -62,61 +69,65 @@ void CommandParser::parseCommand(String cmd) {
     }
 
     // Interpret the command
-    if (m_code==400 ) {
-        Serial.println("Executing command M400: Starting Power-On-Self-Test (POST)");
-        processor.postOn();
-    }
-    if (m_code==401 ) {
-        Serial.println("Executing command M401: Stop Power-On-Self-Test (POST)");
-        processor.postOff();
+    if (m_code==112) {
+        processor.stopAll();
     }
     if (g_code==100 && p_motor>=0 && s_steps!=0 ) {
         if ( f_feedrate!=0 )
             processor.setFeedrate(p_motor, f_feedrate);
-        processor.moveSteps(p_motor, s_steps);
+        processor.moveRelative(p_motor, s_steps);
+    }
+    else if (g_code==101 && p_motor>=0 && s_steps!=0 ) {
+        if ( f_feedrate!=0 )
+            processor.setFeedrate(p_motor, f_feedrate);
+        processor.moveAbsolute(p_motor, s_steps);
+    }
+    else if (g_code==28) {
+        processor.moveToHome(p_motor);
+    }
+    else if (g_code==92 && p_motor>=0 && s_steps!=0 ) {
+        processor.setCurrentPos(p_motor, s_steps);
+    }
+    else if (m_code==400 ) {
+        Serial.println("Executing command M400: Starting Power-On-Self-Test (POST)");
+        processor.postOn();
+    }
+    else if (m_code==401 ) {
+        Serial.println("Executing command M401: Stop Power-On-Self-Test (POST)");
+        processor.postOff();
     }
 
+
 }
 
 
-bool CommandParser::tryParseM400(Token tokens[], int tokenCount, int &pos) {
+bool CommandParser::tryParseM(Token tokens[], int tokenCount, int &pos, String code) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "M")<0 )
         return false;
-    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::NUMBER, "400") <0 )
+    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::NUMBER, code) <0 )
         return false;
 
-    m_code = 400;
+    m_code = code.toInt();
 
     pos = myPos;
     return true;
 }
 
-bool CommandParser::tryParseM401(Token tokens[], int tokenCount, int &pos) {
-    int myPos = pos;
-    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "M")<0 )
-        return false;
-    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::NUMBER, "401") <0 )
-        return false;
 
-    m_code = 401;
-
-    pos = myPos;
-    return true;
-}
-
-bool CommandParser::tryParseG100(Token tokens[], int tokenCount, int &pos) {
+bool CommandParser::tryParseG(Token tokens[], int tokenCount, int &pos, String code) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "G")<0 )
         return false;
-    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::NUMBER, "100") <0 )
+    if ( tryReadToken(tokens, tokenCount, myPos, TokenType::NUMBER, code) <0 )
         return false;
 
-    g_code = 100;
+    g_code = code.toInt();
 
     pos = myPos;
     return true;
 }
+
 
 bool CommandParser::tryParseP(Token tokens[], int tokenCount, int &pos) {
     int myPos = pos;

@@ -28,24 +28,56 @@ void CommandProcessor::printStatus() {
     Serial.println();
 }
 
-void CommandProcessor::postOn() {
-    post=true;
-    if( stepper1.currentPosition() < MOTOR_STEPS_PER_ROUND )
-        stepper1.moveTo( MOTOR_STEPS_PER_ROUND );
+void CommandProcessor::stopAll() {
+    Serial.println("EMERGENCY HALT");
+    stepper1.stop();
+}
+
+void CommandProcessor::moveRelative(int motor, int steps) {
+    Serial.print("Move Motor ");
+    Serial.print(motor);
+    Serial.print(" relative ");
+    Serial.print(steps);
+    Serial.println(" steps.");
+    stepper1.moveTo(stepper1.currentPosition() + steps);
+}
+
+void CommandProcessor::moveAbsolute(int motor, int steps) {
+    Serial.print("Move Motor ");
+    Serial.print(motor);
+    Serial.print(" to step ");
+    Serial.print(steps);
+    Serial.println(" .");
+    stepper1.moveTo(stepper1.currentPosition() + steps);
+}
+
+void CommandProcessor::moveToHome(int motor) {
+    Serial.print("Move Motor ");
+    Serial.print(motor);
+    Serial.print(" to home.");
+    stepper1.moveTo(0);
+}
+
+void CommandProcessor::setCurrentPos(int motor, int steps) {
+    Serial.print("Set Motor ");
+    Serial.print(motor);
+    Serial.print(" current position to step ");
+    Serial.print(steps);
+    Serial.println(" .");
+    stepper1.setCurrentPosition(steps);
 }
 
 void CommandProcessor::setFeedrate(int motor, int feedrate) {
     stepper1.setMaxSpeed(feedrate);
 }
 
-void CommandProcessor::moveSteps(int motor, int steps) {
-    Serial.print("Move Motor ");
-    Serial.print(motor);
-    Serial.print(" ");
-    Serial.print(steps);
-    Serial.println(" steps.");
-    stepper1.moveTo(stepper1.currentPosition() + steps);
+
+void CommandProcessor::postOn() {
+    post=true;
+    if( stepper1.currentPosition() < MOTOR_STEPS_PER_ROUND )
+        stepper1.moveTo( MOTOR_STEPS_PER_ROUND );
 }
+
 
 void CommandProcessor::processCommands() {
     if ( post ) {

@@ -19,10 +19,13 @@ private:
     int s_steps;
     int f_feedrate;
 
-    bool tryParseM400(Token tokens[], int tokenCount, int& pos);
-    bool tryParseM401(Token tokens[], int tokenCount, int& pos);
+    // M-Codes:
+    bool tryParseM(Token tokens[], int tokenCount, int& pos, String code);
 
-    bool tryParseG100(Token tokens[], int tokenCount, int& pos);
+    // G-Codes:
+    bool tryParseG(Token tokens[], int tokenCount, int& pos, String code);
+
+    // G-Code Parameters:
     bool tryParseP(Token tokens[], int tokenCount, int& pos);
     bool tryParseS(Token tokens[], int tokenCount, int& pos);
     bool tryParseF(Token tokens[], int tokenCount, int& pos);
