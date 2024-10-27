@@ -37,6 +37,10 @@ and empty lines will be ignored by the GCode-processor.
 
 * ```M400``` Power-On-Self-Test (POST)
 * ```M401``` Stop Power-On-Self-Test
+* ```G100 P? S? F?``` Manual relative motor control 
+  * P..Motor (0..5) 
+  * S..Steps (-1000..+1000) 
+  * F...Feedrate (-1000..+1000)
 
 ## Further Resources
 

@@ -33,9 +33,9 @@ void loop() {
 
         // LED
         blink = !blink;
-        Serial.print(blink ? "LED is on " : "LED is off");
+        Serial.print(blink ? "*" : ".");
         digitalWrite(LED_BUILTIN, blink ? HIGH : LOW);   // switch the LED on/off (HIGH is the voltage level)
-        Serial.print(" - ");
+        Serial.print(" ");
 
         // Stepper Motor
         processor.printStatus();

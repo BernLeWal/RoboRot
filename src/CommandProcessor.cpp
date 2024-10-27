@@ -13,17 +13,38 @@ void CommandProcessor::setup() {
     // initialize the stepper driver
     stepper1.setMaxSpeed(MOTOR_DEFAULT_MAX_SPEED);
     stepper1.setAcceleration( MOTOR_DEFAULT_ACCELERATION);
-    stepper1.moveTo(MOTOR_STEPS_PER_ROUND);
+    stepper1.moveTo(0);
+    //stepper1.moveTo(MOTOR_STEPS_PER_ROUND);
 }
 
 void CommandProcessor::printStatus() {
     if ( post )
         Serial.print("POST is running");
-    Serial.print("Stepper1 currentPos=");
+
+    Serial.print("Stepper1(P0): pos=");
     Serial.print(stepper1.currentPosition());
-    Serial.print(", distanceToGo=");
+    Serial.print(", 2go=");
     Serial.print(stepper1.distanceToGo());
     Serial.println();
+}
+
+void CommandProcessor::postOn() {
+    post=true;
+    if( stepper1.currentPosition() < MOTOR_STEPS_PER_ROUND )
+        stepper1.moveTo( MOTOR_STEPS_PER_ROUND );
+}
+
+void CommandProcessor::setFeedrate(int motor, int feedrate) {
+    stepper1.setMaxSpeed(feedrate);
+}
+
+void CommandProcessor::moveSteps(int motor, int steps) {
+    Serial.print("Move Motor ");
+    Serial.print(motor);
+    Serial.print(" ");
+    Serial.print(steps);
+    Serial.println(" steps.");
+    stepper1.moveTo(stepper1.currentPosition() + steps);
 }
 
 void CommandProcessor::processCommands() {
@@ -35,3 +56,4 @@ void CommandProcessor::processCommands() {
 
     stepper1.run();
 }
+

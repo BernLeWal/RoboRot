@@ -21,8 +21,11 @@ public:
     void printStatus();
     void processCommands();
 
-    void postOn() { post=true; }
+    void postOn();
     void postOff() { post=false; }
+
+    void setFeedrate(int motor, int feedrate);
+    void moveSteps(int motor, int steps);
 };
 
 
