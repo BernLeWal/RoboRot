@@ -1,18 +1,18 @@
 //
 // Created by wallisch on 27.10.2024.
 //
-#include "CommandParser.h"
+#include "Parser.h"
 #include "Tokenizer.h"
 
 
 
 
-CommandParser::CommandParser(CommandProcessor &cmdProcessor)
+Parser::Parser(CommandProcessor &cmdProcessor)
 : processor(cmdProcessor)
 {
 }
 
-void CommandParser::parseCommand(String cmd) {
+void Parser::parseCommand(String cmd) {
     // Prepare the command:
     // - Remove comments (starting with ';' until the end of the line
     int semicolonPos = cmd.indexOf(';');  // Find the position of the semicolon
@@ -101,7 +101,7 @@ void CommandParser::parseCommand(String cmd) {
 }
 
 
-bool CommandParser::tryParseM(Token tokens[], int tokenCount, int &pos, String code) {
+bool Parser::tryParseM(Token tokens[], int tokenCount, int &pos, String code) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "M")<0 )
         return false;
@@ -115,7 +115,7 @@ bool CommandParser::tryParseM(Token tokens[], int tokenCount, int &pos, String c
 }
 
 
-bool CommandParser::tryParseG(Token tokens[], int tokenCount, int &pos, String code) {
+bool Parser::tryParseG(Token tokens[], int tokenCount, int &pos, String code) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "G")<0 )
         return false;
@@ -129,7 +129,7 @@ bool CommandParser::tryParseG(Token tokens[], int tokenCount, int &pos, String c
 }
 
 
-bool CommandParser::tryParseP(Token tokens[], int tokenCount, int &pos) {
+bool Parser::tryParseP(Token tokens[], int tokenCount, int &pos) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "P")<0 )
         return false;
@@ -146,7 +146,7 @@ bool CommandParser::tryParseP(Token tokens[], int tokenCount, int &pos) {
     return true;
 }
 
-bool CommandParser::tryParseS(Token tokens[], int tokenCount, int &pos) {
+bool Parser::tryParseS(Token tokens[], int tokenCount, int &pos) {
     int myPos = pos;
     boolean signMinus = false;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "S")<0 )
@@ -169,7 +169,7 @@ bool CommandParser::tryParseS(Token tokens[], int tokenCount, int &pos) {
 }
 
 
-bool CommandParser::tryParseF(Token tokens[], int tokenCount, int &pos) {
+bool Parser::tryParseF(Token tokens[], int tokenCount, int &pos) {
     int myPos = pos;
     if ( tryReadToken(tokens, tokenCount, myPos, TokenType::CHAR, "F")<0 )
         return false;
@@ -187,7 +187,7 @@ bool CommandParser::tryParseF(Token tokens[], int tokenCount, int &pos) {
 }
 
 
-int CommandParser::tryReadToken(Token tokens[], int tokenCount, int &pos, TokenType type) {
+int Parser::tryReadToken(Token tokens[], int tokenCount, int &pos, TokenType type) {
     if ( pos >= tokenCount )
         return -1;   // no tokens left
     if ( tokens[pos].type == type ) {
@@ -196,7 +196,7 @@ int CommandParser::tryReadToken(Token tokens[], int tokenCount, int &pos, TokenT
     return -1;
 }
 
-int CommandParser::tryReadToken(Token tokens[], int tokenCount, int &pos, TokenType type, String value) {
+int Parser::tryReadToken(Token tokens[], int tokenCount, int &pos, TokenType type, String value) {
     if ( pos >= tokenCount )
         return -1;   // no tokens left
     if ( tokens[pos].type == type && tokens[pos].value == value) {

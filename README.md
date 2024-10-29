@@ -21,6 +21,10 @@ port and will accept G-Code commands sent by the terminal.
 - Arduino Due https://store.arduino.cc/en-at/products/arduino-due
 - TB6600 Stepper Motor Driver https://www.makerguides.com/tb6600-stepper-motor-driver-arduino-tutorial/
 
+## 3D-Printed Parts
+
+This is our prototype:
+![RoboRot_Prototype.jpg](doc/RoboRot_Prototype.jpg)
 
 ## Usage
 

@@ -1,11 +1,11 @@
 #include <Arduino.h>
 
-#include "CommandParser.h"
+#include "Parser.h"
 #include "CommandProcessor.h"
 
 
 CommandProcessor processor;
-CommandParser parser(processor);
+Parser parser(processor);
 
 
 void setup() {

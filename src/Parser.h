@@ -2,14 +2,14 @@
 // Created by wallisch on 27.10.2024.
 //
 
-#ifndef ROBOROT_COMMANDPARSER_H
-#define ROBOROT_COMMANDPARSER_H
+#ifndef ROBOROT_PARSER_H
+#define ROBOROT_PARSER_H
 
 #include <Arduino.h>
 #include "Tokenizer.h"
 #include "CommandProcessor.h"
 
-class CommandParser {
+class Parser {
 private:
     CommandProcessor& processor;
 
@@ -35,10 +35,10 @@ private:
 
 public:
     // Constructor
-    CommandParser(CommandProcessor& processor);
+    Parser(CommandProcessor& processor);
 
     // Method to process commands
     void parseCommand(String cmd);
 };
 
-#endif //ROBOROT_COMMANDPARSER_H
+#endif //ROBOROT_PARSER_H
